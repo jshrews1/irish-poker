@@ -10,10 +10,10 @@ function createDeck() {
   for (var i = 0; i < values.length; i++) {
     for (var x = 0; x < suits.length; x++) {
       var weight = parseInt(values[i]);
-      if (values[i] == "J") weight = 10;
-      if (values[i] == "Q") weight = 11;
-      if (values[i] == "K") weight = 12;
-      if (values[i] == "A") weight = 13;
+      if (values[i] == "J") weight = 11;
+      if (values[i] == "Q") weight = 12;
+      if (values[i] == "K") weight = 13;
+      if (values[i] == "A") weight = 14;
       var card = { Value: values[i], Suit: suits[x], Weight: weight };
       deck.push(card);
     }
@@ -428,11 +428,13 @@ function drawCard() {
   for (var j = 0; j < players[currentPlayer].Hand.length; j++) {
 
     if(cardCount == 10){
-        alert("Game over man! Click OK four times and then press restart twice or just refresh the page... up to you")
+        alert("Game over man!")
+        startAgain();
     }
 
     if (cardCount == 9 && card.Weight == players[currentPlayer].Hand[j].Weight){
-        alert("You suck finish up")
+        alert("You have the final card! Finish your drink! 8===>")
+        break;
     }
 
     if (
@@ -441,6 +443,8 @@ function drawCard() {
     ) {
       players[currentPlayer].Give = players[currentPlayer].Give + calculateTurn(cardCount);
       updateDeck();
+      alert("Give " + calculateTurn(cardCount))
+      break;
     }
 
     if (
@@ -449,14 +453,15 @@ function drawCard() {
     ) {
       players[currentPlayer].Take = players[currentPlayer].Take + calculateTurn(cardCount);
       updateDeck();
+      alert("Take " + calculateTurn(cardCount))
+      break;
     }
   }
 
 
-
+  document.getElementById("game-options").appendChild(getFinalCardUI(card, cardCount));
   cardCount++;
-
-  document.getElementById("game-options").appendChild(getCardUI(card));
+ 
 }
 
 function calculateTurn(cardCount) {
@@ -487,6 +492,27 @@ function renderCard(card, player) {
 
 function getCardUI(card) {
   var el = document.createElement("div");
+  var icon = "";
+  if (card.Suit == "Hearts") (icon = "&hearts;"), (el.style.color = "#FF0000");
+  else if (card.Suit == "Spades") (icon = "&spades;"), (el.style.color = black);
+  else if (card.Suit == "Diamonds")
+    (icon = "&diams;"), (el.style.color = "#FF0000");
+  else (icon = "&clubs;"), (el.style.color = black);
+
+  el.className = "card";
+  el.innerHTML = card.Value + "<br/>" + icon;
+  return el;
+}
+
+function getFinalCardUI(card, cardCount) {
+  var el = document.createElement("div");
+
+  if (cardCount % 2){
+    el.style.top=100
+  } else {
+    el.style.bottom=100
+  }
+
   var icon = "";
   if (card.Suit == "Hearts") (icon = "&hearts;"), (el.style.color = "#FF0000");
   else if (card.Suit == "Spades") (icon = "&spades;"), (el.style.color = black);
